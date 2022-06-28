@@ -182,7 +182,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["75:11:74:14:43:18:dc:4d:78:35:20:a3:54:bc:2a:ca"]
       - attach_workspace:
-          at: .circleci/ansible/inventory.txt
+          at: ./circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
           command: |
@@ -194,6 +194,7 @@ jobs:
           command: |
             cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
+
       - slack/notify:
           event: always     
       # Here's where you will add some code to rollback on failure      
@@ -336,7 +337,8 @@ workflows:
           #   branches:
           #     only: [test-feature-branch]
       - configure-infrastructure:
-          context: slack
+          context: 
+            - slack
           requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
