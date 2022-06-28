@@ -190,12 +190,10 @@ jobs:
       - run:
           name: Configure server
           command: |
-            cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
 
-      - slack/notify:
-          event: always     
+       
       # Here's where you will add some code to rollback on failure      
 
 #   run-migrations:
