@@ -183,6 +183,7 @@ jobs:
           fingerprints: ["75:11:74:14:43:18:dc:4d:78:35:20:a3:54:bc:2a:ca"]
       - attach_workspace:
           at: ~/
+      - run:
           name: Install dependencies
           command: |
             apk add --update ansible
@@ -191,8 +192,7 @@ jobs:
           name: Configure server
           command: |
             cat .circleci/ansible/inventory.txt
-            ansible-playbook --version
-#            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt 
+            ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt 
 
        
       # Here's where you will add some code to rollback on failure      
