@@ -31,7 +31,8 @@ version: 2.1
 #             #  Add revert code here. You can find this in the Getting Started section.
 #               exit 1
 #             fi
-            
+orbs: 
+  slack: circleci/slack@4.10.1            
 jobs:
   build-frontend:
     docker:
@@ -46,6 +47,8 @@ jobs:
             cd frontend
             npm install
             npm run build
+      - slack/notify:
+          event: pass
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
