@@ -165,9 +165,9 @@ jobs:
             yum install -y tar gzip
 
       - persist_to_workspace:
-          root: ./
+          root: ~/
           paths:
-            - .circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
 
       - slack/notify:
           event: always
@@ -182,17 +182,16 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["75:11:74:14:43:18:dc:4d:78:35:20:a3:54:bc:2a:ca"]
       - attach_workspace:
-          at: ./circleci/ansible/inventory.txt
-      - run:
+          at: ~/
           name: Install dependencies
           command: |
             apk add --update ansible
             apk add --update  tar gzip
-        
       - run:
           name: Configure server
           command: |
             cd .circleci/ansible
+            cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
 
       - slack/notify:
