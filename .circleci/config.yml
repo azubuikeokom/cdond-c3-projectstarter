@@ -52,7 +52,7 @@ jobs:
             npm install
             npm run build
       - slack/notify:
-          event: pass
+          event: always
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -71,7 +71,7 @@ jobs:
             npm install
             npm run build
       - slack/notify:
-          event: fail
+          event: always
 
       - save_cache:
           paths: [backend/node_modules]
@@ -156,10 +156,13 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress'\
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=udapeople" \
             --output text >> inventory.txt
             
+      - slack/notify:
+          event: always
+
       - persist_to_workspace:
           root: ~/
           paths:
@@ -317,6 +320,8 @@ workflows:
       - scan-frontend:
           requires: [build-frontend]
       - deploy-infrastructure:
+          context:
+            - slack
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           # filters:
           #   branches:
