@@ -51,6 +51,6 @@
         state: present
 
     - name: "install pm2"
-        npm:
+      npm:
         name: pm2
         global: yes
