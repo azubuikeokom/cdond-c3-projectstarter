@@ -159,9 +159,14 @@ jobs:
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=udapeople" \
             --output text >> inventory.txt
-            
+
       - slack/notify:
           event: always
+
+      - run:
+          name: install tar utility
+          command: |
+            yum install -y tar gzip
 
       - persist_to_workspace:
           root: ~/
