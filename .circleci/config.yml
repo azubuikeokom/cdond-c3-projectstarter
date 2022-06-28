@@ -158,41 +158,44 @@ jobs:
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=udapeople" \
-            --output text >> inventory.txt
-
-      - slack/notify:
-          event: always
-
+            --output text >> .circleci/ansible/inventory.txt
       - run:
           name: install tar utility
           command: |
             yum install -y tar gzip
 
       - persist_to_workspace:
-          root: ~/
+          root: ./
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
+
+      - slack/notify:
+          event: always
       
       - destroy-environment      
 
-#   configure-infrastructure:
-#     docker:
-#       # Docker image here that supports Ansible
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # Your code here
-#             exit 1
-#       - run:
-#           name: Configure server
-#           command: |
-#             # Your code here
-#             exit 1
-#       # Here's where you will add some code to rollback on failure      
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["75:11:74:14:43:18:dc:4d:78:35:20:a3:54:bc:2a:ca"]
+      - attach_workspace:
+          at: .circleci/ansible/inventory.txt
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            apk install -y tar gzip
+        
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+            
+      # Here's where you will add some code to rollback on failure      
 
 #   run-migrations:
 #     docker:
