@@ -49,7 +49,7 @@
     - name: "install nodejs"
       apt:
         update_cache: yes
-        ame: nodejs
+        name: nodejs
         state: present
 
     - name: "install pm2"
