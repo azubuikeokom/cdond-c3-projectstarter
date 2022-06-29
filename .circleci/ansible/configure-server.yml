@@ -24,7 +24,9 @@
       apt: upgrade=dist force_apt_get=yes
     
     - name: Install Python
-      shell: apt -y update && apt install -y python-minimal
+      apt:
+        name: python
+        state: latest
       
 
 
