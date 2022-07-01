@@ -1,0 +1,15 @@
+---
+
+- name: Extract artifact.tar.gz into EC2 server 
+  ansible.builtin.unarchive:
+    src: /backend/artifact.tar.gz 
+    dest: ~/
+    owner: ubuntu
+    group: ubuntu
+
+- name: start web server
+  command: pm2 stop default; pm2 start npm -- start
+
+
+
+...
