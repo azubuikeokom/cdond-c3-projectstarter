@@ -31,7 +31,7 @@ commands:
             then
               cd ~/project/backend
               npm install
-              npm revert migrations
+              npm migrations:revert
             fi
 orbs: 
   slack: circleci/slack@4.10.1            
@@ -229,9 +229,9 @@ jobs:
           name: install node and npm
           command: |
             yum update
-            yum install node
-            yum install npm
-            yum install tar gzip
+            yum install -y nodejs
+            yum install -y npm
+            yum install -y tar gzip
       - attach_workspace:
           at: ~/
       - run:
@@ -274,9 +274,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install ansible
-            yum install tar gzip
-            yum install node
+            yum update 
+            yum install -y ansible
+            yum install -y tar gzip
+            yum install -y nodejs
       - attach_workspace:
           at: ~/      
       - run:
