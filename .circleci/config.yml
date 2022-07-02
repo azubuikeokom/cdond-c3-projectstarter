@@ -257,7 +257,7 @@ jobs:
       - destroy-environment  
       - revert-migrations
     
-                    
+#unarchive backend server build to EC2 instance with ansible                    
   deploy-backend:
     docker:
       - image: amazon/aws-cli
@@ -273,6 +273,8 @@ jobs:
             yum install -y  tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install -y nodejs
+            yum -y install epel-repo
+            yum -y  update
             yum install -y  ansible
             
             
