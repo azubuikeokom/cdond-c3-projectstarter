@@ -192,9 +192,7 @@ jobs:
           command: |
             cat .circleci/ansible/inventory.txt
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt 
-
-       
-      # Here's where you will add some code to rollback on failure      
+      - destroy-environment   
 
   run-migrations:
     docker:
@@ -228,10 +226,10 @@ jobs:
       - run:
           name: install node and npm
           command: |
-            yum update
-            yum install -y nodejs
-            yum install -y npm
-            yum install -y tar gzip
+            yum update -y
+            curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+            yum install  nodejs
+            yum install  tar gzip
       - attach_workspace:
           at: ~/
       - run:
@@ -274,10 +272,12 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum update 
-            yum install -y ansible
-            yum install -y tar gzip
-            yum install -y nodejs
+            yum update -y
+            curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+            yum install  nodejs
+            yum install  ansible
+            yum install  tar gzip
+            
       - attach_workspace:
           at: ~/      
       - run:
