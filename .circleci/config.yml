@@ -174,6 +174,7 @@ jobs:
       
       - destroy-environment      
 
+#configure-infrastructure installs certain dependencies on the remote machine-python,node,pm2
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
@@ -210,15 +211,18 @@ jobs:
             npm run migrations > migrations_dump.txt
             
       - run:
-          name: Send migration status to kvdb.io OR memstash.io
+          name: Send migration status to kvdb.io
           command: |   
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                curl -H "Content-Type: text/plain" -H "token: 7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
+#                curl -H "Content-Type: text/plain" -H "token: 7933fe63-4687-4fa1-8426-aa25aa1730ec" --request PUT --data "1" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
                 curl https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-            
-     # Here's where you will add some code to rollback on failure      
+
+#rolls back; should migration fail
+      - destroy-environment  
+      - revert-migrations           
+       
 
   deploy-frontend:
     docker:
@@ -260,8 +264,7 @@ jobs:
 
       - destroy-environment  
       - revert-migrations
-
-      # Here's where you will add some code to rollback on failure      
+    
                     
   deploy-backend:
     docker:
@@ -289,7 +292,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-       # Here's where you will add some code to rollback on failure 
+    
 
       - destroy-environment  
       - revert-migrations 
