@@ -227,7 +227,7 @@ jobs:
           name: install node and npm
           command: |
             yum update -y
-            curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+            curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
             yum install  nodejs
             yum install  tar gzip
       - attach_workspace:
@@ -273,7 +273,7 @@ jobs:
           name: Install dependencies
           command: |
             yum update -y
-            curl -sL https://rpm.nodesource.com/setup_10.x | sudo bash -
+            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install  nodejs
             yum install  ansible
             yum install  tar gzip
@@ -322,9 +322,9 @@ jobs:
 
 #   cloudfront-update:
 #     docker:
-#       # Docker image here that supports AWS CLI
+#       #- image: amazon/aws-cli
 #     steps:
-#       # Checkout code from git
+#       #- checkout
 #       - run:
 #           name: Install dependencies
 #           command: |
