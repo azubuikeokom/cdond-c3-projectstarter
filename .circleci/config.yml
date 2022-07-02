@@ -224,9 +224,9 @@ jobs:
           name: install node and npm
           command: |
             yum update -y
-            yum install  tar gzip
+            yum install -y tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
-            yum install  nodejs
+            yum install -y nodejs
             
       - attach_workspace:
           at: ~/
@@ -270,10 +270,10 @@ jobs:
           name: Install dependencies
           command: |
             yum update -y
-            yum install  tar gzip
+            yum install -y  tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            yum install  nodejs
-            yum install  ansible
+            yum install -y nodejs
+            yum install -y  ansible
             
             
       - attach_workspace:
