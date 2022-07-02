@@ -273,8 +273,7 @@ jobs:
             yum install -y  tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install -y nodejs
-            yum install epel-release
-            yum -y  update
+            rpm -ivh http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
             yum install -y  ansible
             
             
