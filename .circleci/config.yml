@@ -26,14 +26,12 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
-            if(( $SUCCESS==1 )); 
+             SUCCESS= $(curl --insecure https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_${CIRCLE_WORKFLOW_ID:0:7})            
+            if(( $SUCCESS==1 ))
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+              cd ~/project/backend
+              npm install
+              npm revert migrations
             fi
 orbs: 
   slack: circleci/slack@4.10.1            
@@ -185,12 +183,12 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
-          name: Install dependencies
+          name: Install dependencies on container
           command: |
             apk add --update ansible
             apk add --update  tar gzip
       - run:
-          name: Configure server
+          name: Configure EC2 server
           command: |
             cat .circleci/ansible/inventory.txt
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt 
@@ -219,10 +217,9 @@ jobs:
             fi
 
 #rolls back; should migration fail
-      - destroy-environment  
       - revert-migrations           
        
-
+#copy frontend build to S3 bucket
   deploy-frontend:
     docker:
       - image: amazon/aws-cli
@@ -236,6 +233,7 @@ jobs:
             yum update
             yum install node
             yum install npm
+            yum install tar gzip
       - run:
           name: Build frontend
           command: |
@@ -267,7 +265,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: amazon/aws-cli
     steps:
       - checkout
       - add_ssh_keys:
@@ -277,8 +275,10 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
-            apk add --update  tar gzip
+            yum install ansible
+            yum install tar gzip
+            yum install node
+            
       - run:
           name: Deploy backend
           command: |
