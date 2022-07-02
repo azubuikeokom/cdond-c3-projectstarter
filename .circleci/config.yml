@@ -225,8 +225,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
           name: install node and npm
           command: |
@@ -234,6 +232,8 @@ jobs:
             yum install node
             yum install npm
             yum install tar gzip
+      - attach_workspace:
+          at: ~/
       - run:
           name: Build frontend
           command: |
@@ -270,15 +270,15 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["75:11:74:14:43:18:dc:4d:78:35:20:a3:54:bc:2a:ca"]
-      - attach_workspace:
-          at: ~/
+
       - run:
           name: Install dependencies
           command: |
             yum install ansible
             yum install tar gzip
             yum install node
-            
+      - attach_workspace:
+          at: ~/      
       - run:
           name: Deploy backend
           command: |
