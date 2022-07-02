@@ -166,10 +166,8 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-
       - slack/notify:
-          event: always
-      
+          event: always     
       - destroy-environment      
 
 #configure-infrastructure installs certain dependencies on the remote machine-python,node,pm2
@@ -213,7 +211,6 @@ jobs:
             then
                 curl https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-
 #rolls back; should migration fail
       - revert-migrations           
        
@@ -227,9 +224,10 @@ jobs:
           name: install node and npm
           command: |
             yum update -y
+            yum install  tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
             yum install  nodejs
-            yum install  tar gzip
+            
       - attach_workspace:
           at: ~/
       - run:
@@ -256,7 +254,6 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-
       - destroy-environment  
       - revert-migrations
     
@@ -273,10 +270,11 @@ jobs:
           name: Install dependencies
           command: |
             yum update -y
+            yum install  tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install  nodejs
             yum install  ansible
-            yum install  tar gzip
+            
             
       - attach_workspace:
           at: ~/      
@@ -292,14 +290,12 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-    
-
       - destroy-environment  
       - revert-migrations 
 
   # smoke-test:
   #   docker:
-  #     - image: alpine:3.15
+  #     - image: python:3.7-alpine3.11
   #   steps:
   #     - checkout
   #     - run:
