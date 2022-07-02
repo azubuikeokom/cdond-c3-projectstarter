@@ -246,7 +246,7 @@ jobs:
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-            cat frontend/.env"
+            cat frontend/.env
       - run:
           name: Deploy frontend objects
           command: |
@@ -273,8 +273,8 @@ jobs:
             yum install -y  tar gzip
             curl -sL https://rpm.nodesource.com/setup_10.x | bash -
             yum install -y nodejs
-            rpm -ivh http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
-            yum install -y  ansible
+            amazon-linux-extras install epel
+            yum install -y ansible
             
             
       - attach_workspace:
