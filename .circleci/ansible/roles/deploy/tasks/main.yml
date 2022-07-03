@@ -4,13 +4,14 @@
   ansible.builtin.unarchive:
     src: ~/project/artifact.tar.gz 
     dest: ~/
-    owner: ubuntu
-    group: ubuntu
   
+- name: npm install all
+  command: npm install
+  
+- name: pm2 stop all
+  command: pm2 stop default
 
-# - name: start web server
-#   command: npm install; npm run start:prod
-
-
+- name: start server with pm2
+  command: pm2 start npm -- start:prod
 
 ...
