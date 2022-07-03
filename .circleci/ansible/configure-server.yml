@@ -23,13 +23,6 @@
     - name: "upgrade packages"
       apt: upgrade=dist force_apt_get=yes
     
-    - name: Install Python
-      apt:
-        name: python
-        state: latest
-      
-
-
   # Get the environment variables from CircleCI and add to the EC2 instance
   environment:
     - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"  
@@ -42,17 +35,5 @@
     - TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
     - TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
 
-  tasks:
-    - name: "nodesource installation"
-      shell: curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-  
-    - name: "install nodejs"
-      apt:
-        update_cache: yes
-        name: nodejs
-        state: present
-
-    - name: "install pm2"
-      npm:
-        name: pm2
-        global: yes
+  roles:
+    - configure-server
