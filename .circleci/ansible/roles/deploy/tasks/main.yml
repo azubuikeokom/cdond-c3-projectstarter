@@ -6,9 +6,10 @@
     dest: ~/
     owner: ubuntu
     group: ubuntu
+    chmod: 771
 
-- name: start web server
-  command: npm install; npm run start:prod
+# - name: start web server
+#   command: npm install; npm run start:prod
 
 
 
