@@ -310,31 +310,21 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout
       - run:
-          name: Install dependencies
+          name: Get backend url and run backend smoke test
           command: |
-            yum update -y
-            yum install -y  tar gzip
-            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            yum install -y nodejs
-            amazon-linux-extras install -y epel
-            yum install -y ansible
-      # - run:
-      #     name: Get backend url and run backend smoke test
-      #     command: |
-      #       export BACKEND_IP=$( aws ec2 describe-instances \
-      #       --query 'Reservations[*].Instances[*].PublicIpAddress' \
-      #       --filters "Name=tag:project,Values=udapeople" \
-      #       --output text)
-      #       export API_URL="http://${BACKEND_IP}:3030"
-      #       echo "${API_URL}"
-      #       if curl "${API_URL}/api/status" | grep "ok"
-      #       then
-      #           echo Awesome, backend worked!
-      #       else
-      #           return 1
-      #       fi
+            export BACKEND_IP=$( aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:project,Values=udapeople" \
+            --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+                echo Awesome, backend worked!
+            else
+                return 1
+            fi
 
       - run:
           name: Frontend smoke test.
@@ -355,11 +345,6 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            # your code here
       - run:
           name: Update cloudfront distribution
           command: |
