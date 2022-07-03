@@ -4,12 +4,14 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      # Add parameter here   
+      workflow_id:
+        type: string  
     steps:
       - run:
           name: Destroy backend & frontend environments
           when: on_fail
           command: |
+            echo Destroying environment <<parameters.workflow_id>>
             aws cloudformation delete-stack \
             --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} 
             aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
@@ -27,12 +29,12 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS= $(curl --insecure https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_${CIRCLE_WORKFLOW_ID:0:7})            
-            if(( $SUCCESS==1 ))
+            SUCCESS=$(curl --insecure https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_${CIRCLE_WORKFLOW_ID:0:7})            
+            if(( $SUCCESS==1 ));
             then
               cd ~/project/backend
               npm install
-              npm migrations:revert
+              npm run migrations:revert
             fi
 orbs: 
   slack: circleci/slack@4.10.1            
@@ -169,7 +171,9 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       - slack/notify:
           event: always     
-      - destroy-environment      
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}   
+
 
 #configure-infrastructure installs certain dependencies on the remote machine-python,node,pm2
   configure-infrastructure:
@@ -191,7 +195,8 @@ jobs:
           command: |
             cat .circleci/ansible/inventory.txt
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt 
-      - destroy-environment   
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
 
   run-migrations:
     docker:
@@ -213,6 +218,8 @@ jobs:
                 curl https://kvdb.io/9GE4jRtKznmVKRfvdBABBe/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
 #rolls back; should migration fail
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}   
       - revert-migrations           
        
 #copy frontend build to S3 bucket
@@ -256,7 +263,8 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - destroy-environment  
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}   
       - revert-migrations
     
 #unarchive backend server build to EC2 instance with ansible                    
@@ -294,7 +302,8 @@ jobs:
             cat inventory.txt
             ls -l ~/project/
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - destroy-environment  
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}   
       - revert-migrations 
 
   smoke-test:
@@ -327,17 +336,6 @@ jobs:
                 return 1
             fi
 
-      # - run:
-      #     name: Backend smoke test.
-      #     command: |
-      #       export API_URL="http://${BACKEND_IP}:3030"
-      #       echo "${API_URL}"
-      #       if curl "${API_URL}/api/status" | grep "ok"
-      #       then
-      #           echo Awesome, backend worked!
-      #       else
-      #           return 1
-      #       fi
       - run:
           name: Frontend smoke test.
           command: |
@@ -349,7 +347,8 @@ jobs:
             else
                 return 1
             fi
-      - destroy-environment  
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}   
       - revert-migrations 
 
 #   cloudfront-update:
