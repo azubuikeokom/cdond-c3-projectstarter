@@ -312,16 +312,12 @@ jobs:
             amazon-linux-extras install -y epel
             yum install -y ansible
       - run:
-          name: Get backend url
+          name: Get backend url and run backend smoke test
           command: |
             export BACKEND_IP=$( aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:project,Values=udapeople" \
             --output text)
-
-      - run:
-          name: Backend smoke test.
-          command: |
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             if curl "${API_URL}/api/status" | grep "ok"
@@ -330,6 +326,18 @@ jobs:
             else
                 return 1
             fi
+
+      # - run:
+      #     name: Backend smoke test.
+      #     command: |
+      #       export API_URL="http://${BACKEND_IP}:3030"
+      #       echo "${API_URL}"
+      #       if curl "${API_URL}/api/status" | grep "ok"
+      #       then
+      #           echo Awesome, backend worked!
+      #       else
+      #           return 1
+      #       fi
       - run:
           name: Frontend smoke test.
           command: |
