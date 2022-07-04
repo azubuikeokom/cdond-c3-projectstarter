@@ -282,7 +282,7 @@ jobs:
           command: |
             yum update -y
             yum install -y  tar gzip
-            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+            curl -sL https://rpm.nodesource.com/setup_12.x | bash -
             yum install -y nodejs
             amazon-linux-extras install -y epel
             yum install -y ansible
