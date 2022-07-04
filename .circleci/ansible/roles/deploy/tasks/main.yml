@@ -10,8 +10,5 @@
   
 - name: start server with pm2
   command: pm2 start npm -- start
-
-- debug:
-    - msg: "{{ansible_env}}"
-
+  
 ...
