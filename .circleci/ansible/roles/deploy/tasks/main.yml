@@ -11,8 +11,7 @@
 - name: start server with pm2
   command: pm2 start npm -- start
 
-- name: print environment variable
-  debug:
+- debug:
     - msg: "{{ansible_env}}"
 
 ...
