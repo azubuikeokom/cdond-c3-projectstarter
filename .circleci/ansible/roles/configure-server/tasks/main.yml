@@ -5,13 +5,13 @@
     state: latest
     
 - name: "nodesource installation"
-  shell: curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+  shell: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
 
 - name: "install nodejs"
   apt:
     update_cache: yes
     name: nodejs
-    state: present
+    state: latest
 
 - name: "install pm2"
   npm:
