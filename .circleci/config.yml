@@ -369,7 +369,6 @@ jobs:
             CURRENT_WORKFLOW_ID=${CIRCLE_WORKFLOW_ID:0:7}
             echo current workflow id: $CURRENT_WORKFLOW_ID
             STACKS=$(aws cloudformation  describe-stacks \
-            --stack-status-filter CREATE_COMPLETE \
             --query Stacks[*].Parameters[*].ParameterValue --output text)
             echo Stack names: "${STACKS[@]}"
             for work_id in ${STACKS[@]}
