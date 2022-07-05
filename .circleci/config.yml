@@ -374,6 +374,7 @@ jobs:
       - run:
           name: Remove old stacks and files
           command: |
+            echo  stacks: ${STACKS[@]}" 
             for work_id in ${STACK[@]}
             do
               if [ $work_id != $CURRENT_WORKFLOW_ID ]   
