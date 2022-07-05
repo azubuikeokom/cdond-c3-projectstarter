@@ -376,7 +376,7 @@ jobs:
           command: |
             for work_id in ${STACK[@]}
             do
-              if [ work_id != $CURRENT_WORKFLOW_ID ]   
+              if [ $work_id != $CURRENT_WORKFLOW_ID ]   
               then
                 aws s3 rm s3://work_id --recursive
                 aws cloudformation delete-stack --stack-name "udapeople-backend-${work_id:10:16}"
