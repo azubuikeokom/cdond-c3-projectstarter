@@ -366,14 +366,18 @@ jobs:
       - run:
           name: Get all stack workflow id and remove old stack files
           command: |
-            export CURRENT_WORKFLOW_ID=${CIRCLE_WORKFLOW_ID:0:7}
+            CURRENT_WORKFLOW_ID=${CIRCLE_WORKFLOW_ID:0:7}
             echo current workflow id: $CURRENT_WORKFLOW_ID
-            export STACKS=$(aws cloudformation  describe-stacks \
+            STACKS=$(aws cloudformation  describe-stacks \
             --query Stacks[*].Parameters[*].ParameterValue --output text)
             echo Stack names: "${STACKS[@]}"
             for work_id in ${STACKS[@]}
             do
-            echo $work_id
+            if [ $work_id != $CURRENT_WORKFLOW_ID ]
+            then
+              echo not same
+            else
+              echo same
             done
 
 workflows:
