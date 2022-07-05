@@ -370,16 +370,17 @@ jobs:
             echo current workflow id: $CURRENT_WORKFLOW_ID
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
             --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-            mystacks=($STACKS)  
+            mystacks=($STACKS)
+            echo ${#mystacks[@]} items in stack  
             for work_id in ${mystacks[@]}
             do
-            if [ $work_id != $CURRENT_WORKFLOW_ID ]
+            if [ ${work_id: -7} != $CURRENT_WORKFLOW_ID ]
             then
                 aws s3 rm "s3://udapeople-${work_id: -7}" --recursive
                 aws cloudformation delete-stack --stack-name $work_id
                 echo $work_id removed from stack
             else
-              echo same
+              echo No old stack to remove
             fi
             done
 
