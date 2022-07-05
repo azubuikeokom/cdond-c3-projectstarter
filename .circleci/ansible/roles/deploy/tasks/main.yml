@@ -11,7 +11,7 @@
 - name: start server with pm2
   command: pm2 start npm -- start
 
-- name: delay process by a minute
+- name: delay process by 60 seconds
   ansible.builtin.pause:
     minutes: 1
 
