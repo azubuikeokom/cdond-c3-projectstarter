@@ -373,7 +373,7 @@ jobs:
             echo Stack names: "${STACKS[@]}"
             for work_id in ${STACKS[@]}
             do
-            echo work_id
+            echo $work_id
             done
 
 workflows:
