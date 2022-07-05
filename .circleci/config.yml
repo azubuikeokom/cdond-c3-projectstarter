@@ -378,6 +378,7 @@ jobs:
               echo not same
             else
               echo same
+            fi
             done
 
 workflows:
