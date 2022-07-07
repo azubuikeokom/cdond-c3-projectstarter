@@ -405,9 +405,9 @@ jobs:
       - run:
           name: Configure node_exporter
           command: |
-          cd .circleci/ansible
-          cat inventory.txt
-          ansible-playbook  node-exporter-config.yml -i inventory.txt
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook  node-exporter-config.yml -i inventory.txt
 
   deploy-prometheus-server:
     docker:
