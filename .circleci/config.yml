@@ -404,7 +404,7 @@ jobs:
             yum install -y ansible
       - run:
           name: Configure node_exporter
-          command: ansible-playbook -i inventory.txt node-exporter-config.yml
+          command: ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/node-exporter-config.yml
 
   deploy-prometheus-server:
     docker:
@@ -440,7 +440,7 @@ jobs:
       - run:
           name: Install prometheus and alertmanager on server
           command: |
-            ansible-playbook -i inventory.txt prometheus-alertmanager-config.yml  
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/prometheus-alertmanager-config.yml  
 
 workflows:
   default:
