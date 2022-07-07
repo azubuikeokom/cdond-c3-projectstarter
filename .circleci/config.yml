@@ -479,7 +479,7 @@ workflows:
           requires: [smoke-test]
       - cleanup:
           requires: [cloudfront-update]
-      configure-node-exporter:
+      - configure-node-exporter:
           requires: [smoke-test]
-      deploy-prometheus-server:
+      - deploy-prometheus-server:
           requires: [configure-node-exporter]
