@@ -1,0 +1,13 @@
+---
+
+- name: "configuration play." 
+  hosts: web
+  user: ubuntu
+  become: true
+  become_method: sudo
+  become_user: root  
+  gather_facts: false
+  
+
+  roles:
+    - configure-node-exporter
