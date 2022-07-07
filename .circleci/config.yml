@@ -386,6 +386,63 @@ jobs:
             fi
             done
 
+  configure-node-exporter:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["75:11:74:14:43:18:dc:4d:78:35:20:a3:54:bc:2a:ca"]
+
+      - run:
+          name: Install dependencies
+          command: |
+            yum update -y
+            yum install -y  tar gzip
+            curl -sL https://rpm.nodesource.com/setup_13.x | bash -
+            yum install -y nodejs
+            amazon-linux-extras install -y epel
+            yum install -y ansible
+      - run:
+          name: Configure node_exporter
+          command: |
+          ansible-playbook -i inventory.txt node-exporter-config.yml
+
+  deploy-prometheus-server:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["75:11:74:14:43:18:dc:4d:78:35:20:a3:54:bc:2a:ca"]
+      - run:
+          name: Install dependencies
+          command: |
+            yum update -y
+            yum install -y  tar gzip
+            curl -sL https://rpm.nodesource.com/setup_13.x | bash -
+            yum install -y nodejs
+            amazon-linux-extras install -y epel
+            yum install -y ansible
+      - run:
+          name: Ensure server exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/prometheus-server.yml \
+              --tags project=prometheus \
+              --stack-name udapeople-prometheus-${CIRCLE_WORKFLOW_ID:0:7} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          command: |
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters "Name=tag:project,Values=prometheus" \
+            --output text >> .circleci/ansible/inventory.txt
+      - run:
+          name: Install prometheus and alertmanager on server
+          command: |
+            ansible-playbook -i inventory.txt prometheus-alertmanager-config.yml  
+
 workflows:
   default:
     jobs:
@@ -423,3 +480,7 @@ workflows:
           requires: [smoke-test]
       - cleanup:
           requires: [cloudfront-update]
+      configure-node-exporter:
+          requires: [smoke-test]
+      deploy-prometheus-server:
+          requires: [configure-node-exporter]
