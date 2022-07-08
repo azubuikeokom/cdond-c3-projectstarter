@@ -4,7 +4,7 @@
     dest: /tmp
     remote_src: yes
 
-- name: "move binary to /usr/local/bin."
+- name: "move alertmanager binary to /usr/local/bin."
   become: true
   copy:
     src: /tmp/alertmanager-0.21.0.linux-amd64/alertmanager
@@ -30,6 +30,12 @@
   become: true
   copy:
     src: rules.yml
+    dest: /etc/prometheus/
+
+- name: "copy alertmanager.yml to prometheus config folder"
+  become: true
+  copy:
+    src: alertmanager.yml
     dest: /etc/prometheus/
 
 - name: "add alertmanager service configuration."
