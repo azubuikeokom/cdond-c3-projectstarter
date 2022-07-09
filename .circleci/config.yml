@@ -208,7 +208,6 @@ jobs:
           command: |
             cd backend
             npm install
-            npm build
             npm run migrations > migrations_dump.txt
             
       - run:
@@ -254,7 +253,7 @@ jobs:
             --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
-            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            echo API_URL="https://${BACKEND_IP}:3030" >> frontend/.env
             cat frontend/.env
       - run:
           name: Deploy frontend objects
@@ -262,6 +261,7 @@ jobs:
             cd frontend
             npm install
             npm run build
+            ls -al
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:

@@ -58,9 +58,3 @@
     src: prometheus.yml
     dest: /etc/prometheus/prometheus.yml
 
-- name: "restart prometheus service"
-  become: true
-  systemd:
-    state: restarted
-    name: prometheus
-    enabled: yes
