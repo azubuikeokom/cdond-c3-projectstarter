@@ -190,6 +190,14 @@ jobs:
           command: |
             apk add --update ansible
             apk add --update  tar gzip
+            apk add --update curl
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install --no-cache-dir \
+            awscli \
+            && rm -rf /var/cache/apk/*
       - run:
           name: Configure EC2 server
           command: |
@@ -320,7 +328,6 @@ jobs:
             && pip3 install --no-cache-dir \
             awscli \
             && rm -rf /var/cache/apk/*
-            aws --version
       - run:
           name: Get backend url and run backend smoke test
           command: |
