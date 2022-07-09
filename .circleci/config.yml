@@ -391,9 +391,15 @@ workflows:
       - build-frontend:
           context:
             - slack
+          filters:
+            branches:
+              only: [dev-branch] 
       - build-backend:
           context:
             - slack
+          filters:
+            branches:
+              only: [dev-branch] 
       - test-frontend:
           requires: [build-frontend]
           filters:
@@ -435,6 +441,9 @@ workflows:
               only: [dev-branch] 
       - deploy-frontend:
           requires: [run-migrations]
+          filters:
+            branches:
+              only: [master] 
       - deploy-backend:
           requires: [run-migrations]
       - smoke-test:
