@@ -36,7 +36,7 @@
   become: true
   copy:
     src: /tmp/prometheus-2.19.0.linux-amd64/consoles
-    dest: /etc/prometheus/"
+    dest: /etc/prometheus/
     remote_src: yes
     mode: '0777'
 
@@ -44,7 +44,7 @@
   become: true
   copy:
     src: /tmp/prometheus-2.19.0.linux-amd64/console_libraries
-    dest: /etc/prometheus/"
+    dest: /etc/prometheus/
     remote_src: yes
     mode: '0777'
 
