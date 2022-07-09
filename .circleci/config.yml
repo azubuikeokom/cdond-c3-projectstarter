@@ -115,7 +115,7 @@ jobs:
           command: |
             cd frontend
             npm install
-            npm audit fix --audit-level=critical
+            npm  fix --audit-level=critical
 
   scan-backend:
     docker:
@@ -129,7 +129,7 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix --audit-level=critical
+            npm audit  --audit-level=critical
 
   deploy-infrastructure:
     docker:
@@ -237,7 +237,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install node and npm
+          name: install dependencies
           command: |
             yum update -y
             yum install -y tar gzip
@@ -245,13 +245,7 @@ jobs:
             yum install -y nodejs
             
       - attach_workspace:
-          at: ~/
-      - run:
-          name: Build frontend
-          command: |
-            cd frontend
-            npm install
-            npm run build      
+          at: ~/    
       - run:
           name: Get backend url
           command: |
