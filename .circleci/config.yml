@@ -294,7 +294,7 @@ jobs:
           name: Deploy backend
           command: |
             cd backend
-            npm i
+            npm install
             npm run build
             cd ..         
             tar -C backend -czvf artifact.tar.gz .
@@ -448,6 +448,10 @@ jobs:
               --tags project=prometheus \
               --stack-name udapeople-prometheus-${CIRCLE_WORKFLOW_ID:0:7} \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          name: delay for 1 minute
+          command: sleep 1m
+
       - run:
           name: Append IP to inventory file
           command: |
