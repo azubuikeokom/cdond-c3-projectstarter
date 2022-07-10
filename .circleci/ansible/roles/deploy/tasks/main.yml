@@ -8,9 +8,6 @@
 - name: npm install all
   command: npm install
 
-- name: stop default
-  command: pm2 stop default
-
 - name: start server with pm2
   command: pm2 start npm -- start
 
