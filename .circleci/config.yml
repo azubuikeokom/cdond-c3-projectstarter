@@ -172,7 +172,7 @@ jobs:
       - slack/notify:
           event: always     
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}   
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}    
 
 
 #configure-infrastructure installs certain dependencies on the remote machine-python,node,pm2
