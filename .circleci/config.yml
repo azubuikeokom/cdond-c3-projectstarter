@@ -467,7 +467,7 @@ jobs:
             ansible-playbook -i inventory.txt prometheus-alertmanager-config.yml  
 
 workflows:
-  default:
+  default1:
     jobs:
       - build-frontend:
           context:
