@@ -261,6 +261,7 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
+            cat .env
             npm install
             npm run build
             ls -al
