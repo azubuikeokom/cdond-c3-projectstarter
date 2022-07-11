@@ -457,7 +457,7 @@ jobs:
           name: Append IP to inventory file
           command: |
             aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \ 
             --filters "Name=tag:project,Values=prometheus" \
             --output text >> .circleci/ansible/inventory.txt
       - run:
@@ -468,7 +468,7 @@ jobs:
             ansible-playbook -i inventory.txt prometheus-alertmanager-config.yml  
 
 workflows:
-  default1:
+  default2:
     jobs:
       - build-frontend:
           context:
