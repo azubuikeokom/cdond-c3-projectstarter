@@ -178,7 +178,7 @@ jobs:
 #configure-infrastructure installs certain dependencies on the remote machine-python,node,pm2
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.7-alpine3.11 
     steps:
       - checkout
       - add_ssh_keys:
@@ -190,13 +190,21 @@ jobs:
           command: |
             apk add --update ansible
             apk add --update  tar gzip
+            apk add --update curl
+            apk add --no-cache \
+            python3 \
+            py3-pip \
+            && pip3 install --upgrade pip \
+            && pip3 install --no-cache-dir \
+            awscli \
+            && rm -rf /var/cache/apk/*
       - run:
           name: Configure EC2 server
           command: |
             cat .circleci/ansible/inventory.txt
             ansible-playbook .circleci/ansible/configure-server.yml -i .circleci/ansible/inventory.txt 
       - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}      
 
   run-migrations:
     docker:
